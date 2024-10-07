@@ -38,12 +38,13 @@ public class SocketModule {
         return (senderClient, data, ackSender) -> {
             log.info("{} -> {}", senderClient.getSessionId(), data);
             Notification response = notificationService.save(data);
-            senderClient.getNamespace().getAllClients().forEach(client -> {
-                if (!client.getSessionId().equals(senderClient.getSessionId())) {
-                    client.sendEvent(GET_NOTIFICATION, response);
-                    ackSender.sendAckData(true);
-                }
-            });
+
+            senderClient.getNamespace().getAllClients().stream()
+                    .filter(client -> !client.getSessionId().equals(senderClient.getSessionId()))
+                    .forEach(client -> {
+                        client.sendEvent(GET_NOTIFICATION, response);
+                        ackSender.sendAckData(true);
+                    });
         };
     }
 
