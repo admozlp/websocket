@@ -2,12 +2,8 @@ package com.ademozalp.websocket.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@Slf4j
 public class SocketUtils {
 
     public static final String SOCKET_SERVER_HOST = "0.0.0.0";
