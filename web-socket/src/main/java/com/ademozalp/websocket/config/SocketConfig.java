@@ -22,7 +22,7 @@ public class SocketConfig {
 
         configuration.setPort(SOCKET_SERVER_PORT);
 
-        configuration.setOrigin("http://192.168.68.116:8080");
+        configuration.setOrigin(null);
 
         return new SocketIOServer(configuration);
     }
