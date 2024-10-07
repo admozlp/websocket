@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
-public class Message {
+public class Notification {
     private String content;
     private String to;
     private String dateTime;

@@ -1,6 +1,6 @@
 package com.ademozalp.websocket.socket;
 
-import com.ademozalp.websocket.model.Message;
+import com.ademozalp.websocket.model.Notification;
 import com.ademozalp.websocket.service.NotificationService;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
@@ -23,7 +23,7 @@ public class SocketModule {
         this.notificationService = notificationService;
         socketIOServer.addConnectListener(onConnect());
         socketIOServer.addDisconnectListener(onDisconnect());
-        socketIOServer.addEventListener(SEND_NOTIFICATION, Message.class, onNotificationReceived());
+        socketIOServer.addEventListener(SEND_NOTIFICATION, Notification.class, onNotificationReceived());
     }
 
     private ConnectListener onConnect() {
@@ -34,10 +34,10 @@ public class SocketModule {
         return client -> log.info("SocketId: {} disconnected", client.getSessionId());
     }
 
-    private DataListener<Message> onNotificationReceived() {
+    private DataListener<Notification> onNotificationReceived() {
         return (senderClient, data, ackSender) -> {
             log.info("{} -> {}", senderClient.getSessionId(), data);
-            Message response = notificationService.save(data);
+            Notification response = notificationService.save(data);
             senderClient.getNamespace().getAllClients().forEach(client -> {
                 if (!client.getSessionId().equals(senderClient.getSessionId())) {
                     client.sendEvent(GET_NOTIFICATION, response);
