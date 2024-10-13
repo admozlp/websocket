@@ -26,6 +26,9 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.corundumstudio.socketio:netty-socketio:1.7.17'
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+
 //    implementation 'org.apache.httpcomponents.client5:httpclient5-fluent:5.3.1'
 //    implementation 'commons-io:commons-io:20030203.000550'
     compileOnly 'org.projectlombok:lombok'
