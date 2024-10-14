@@ -9,12 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 import static com.ademozalp.websocket.utils.SocketUtils.GET_CMS_NOTIFICATION;
 import static com.ademozalp.websocket.utils.SocketUtils.SEND_CMS_NOTIFICATION;
-
 
 @Component
 @Slf4j
@@ -28,12 +28,17 @@ public class SocketModule {
 
     private ConnectListener onConnect() {
         return client -> {
-            String rooms = client.getHandshakeData().getSingleUrlParam("room");
-            String[] roomList = rooms.split(",");
-            for (String room : roomList) {
-                client.joinRoom(room);
+            Optional<String> rooms = Optional.ofNullable(client.getHandshakeData().getSingleUrlParam("room"));
+            if (rooms.isPresent() && !rooms.get().isEmpty()) {
+                String[] roomList = rooms.get().split(",");
+                for (String room : roomList) {
+                    client.joinRoom(room);
+                }
+                log.info("SocketId: {} connected -> room: {}", client.getSessionId(), roomList);
+            } else {
+                client.disconnect();
+                log.info("Client has no room disconnected");
             }
-            log.info("SocketId: {} connected -> room: {}", client.getSessionId(), roomList);
         };
     }
 
@@ -49,7 +54,7 @@ public class SocketModule {
             data.getRolesList()
                     .forEach(role -> senderClient.getNamespace().getRoomOperations(role).getClients()
                             .forEach(client -> {
-                                if (!sessionIdList.contains(client.getSessionId())) {
+                                if (!sessionIdList.contains(client.getSessionId()) && !client.getSessionId().equals(senderClient.getSessionId())) {
                                     client.sendEvent(GET_CMS_NOTIFICATION, data);
                                     ackSender.sendAckData(true);
                                     sessionIdList.add(client.getSessionId());
