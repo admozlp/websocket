@@ -1,9 +1,0 @@
-prometheus:
-  prometheusSpec:
-    additionalScrapeConfigs:
-      - job_name: 'spring actuator'
-        metrics_path: '/actuator/prometheus'
-        scrape_interval: 5s
-        scheme: https
-        static_configs:
-          - targets: ['https://a84a-213-14-146-110.ngrok-free.app/']
